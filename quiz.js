@@ -224,7 +224,7 @@ first_question = () => {
     }
     // display text in left-bottom corner
     if (matrix[nRoom][nPage].questionType === "life") {
-        $(".quiz-type").html(`בוחן עבור <img class="text-heart" src="assets/media/heart/heart1_happy.svg">`);
+        $(".quiz-type").html(`בוחן עבור <img class="text-heart" src="heart/heart1_happy.svg">`);
     } else if (matrix[nRoom][nPage].questionType === "finish") {
         $(".quiz-type").html(`בוחן סיום חדר`);
     }
@@ -310,7 +310,7 @@ check_quiz = () => {
             switch_class($(`#hearts-flex`), "none", "flex");
             // heart images- switch to happy
             for (let i = 1; i <= nLife; i++) {
-                $(`#heart-${i} .heart`).attr("src", `assets/media/heart/heart${i}_happy.svg`);
+                $(`#heart-${i} .heart`).attr("src", `heart/heart${i}_happy.svg`);
             }
             // animation of popping heart
             setTimeout(() => {
@@ -340,16 +340,16 @@ check_quiz = () => {
         // going back to home page to open new room
         else if (matrix[nRoom][nPage].questionType === "finish") {
             // display end-room general page
-            $("#spinning-bg").attr("src", "assets/media/room_finish/round_finish_bg.svg");
+            $("#spinning-bg").attr("src", "room_finish/round_finish_bg.svg");
             $(`#ending-room`).css("display", "block");
-            $(`#room-item`).attr("src", `assets/media/room_finish/finish_room_${nRoom}.svg`);
+            $(`#room-item`).attr("src", `room_finish/finish_room_${nRoom}.svg`);
             // keeping in the array the room's mark
             let mark = Math.round((100 / question_num) * correct_question_counter);
             arr_marks.push(mark);
             $(`#ending-room .ending-room-title`).text(`ציון: ${mark}`);
             setTimeout(() => {
                 // hide end-room general page
-                $("#spinning-bg").attr("src", "assets/media/heart/round_lights.svg");
+                $("#spinning-bg").attr("src", "heart/round_lights.svg");
                 $(`#ending-room`).css("display", "none");
                 switch_class($("#spinning-flex"), "flex", "none");
                 // opening new room
