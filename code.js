@@ -820,34 +820,24 @@ $(function () {
 });
 
 function movePage() {
-  // appearance
-  // shows current divs
+  // 1. Appearance: Show current divs
   for (let i = 0; i < matrix[nRoom][nPage].divName.length; i++) {
     $("#" + matrix[nRoom][nPage].divName[i]).css("display", "block");
   }
 
-  // functions
-  // calls the functions of the page
+  // 2. Functions: Execute the logic for this page
   if (matrix[nRoom][nPage].functions.length > 0) {
-    let nFunction = 0;
-    while (nFunction < matrix[nRoom][nPage].functions.length) {
+    // We use a simple loop without splicing to keep the matrix intact for future visits
+    for (let nFunction = 0; nFunction < matrix[nRoom][nPage].functions.length; nFunction++) {
       eval(matrix[nRoom][nPage].functions[nFunction]);
-      // functions that contains the word "pop" will accur only once
-      if (matrix[nRoom][nPage].functions[nFunction].includes("pop")) {
-        matrix[nRoom][nPage].functions.splice(nFunction, 1);
-        // since the function happens only once there is no need in adding nFunction +1
-      } else {
-        nFunction++;
-      }
     }
   }
 
+  // 3. Identify Type: Run type-specific logic (game, quiz, content)
   if (matrix[nRoom][nPage].type !== undefined) {
-    // identify type
     eval(`type_${matrix[nRoom][nPage].type}()`);
   }
 }
-
 function hidePage() {
   // hides last divs
   for (let i = 0; i < matrix[nRoom][nPage].divName.length; i++) {
@@ -862,17 +852,22 @@ function hidePage() {
 
 // function that adds events listeners to room buttons that displays the chosen room- called only one time for each button
 function pop_room_buttons(button) {
-  // changing button appearance
   switch_class(button, "enabled", "abled");
-  button.on("click", function () {
-    // hides last divs
+  button.off("click").on("click", function () {
     hidePage();
-    // changes room counter
+    
+    // 1. Set the room and reset the page
     nRoom = Number(button.attr("id").slice(-1));
-    // display room
+    nPage = 0; 
+
+    // 2. FORCE initialize the navigation buttons for this room
+    pop_home_page_button();
+    pop_buttons($("#next-button"), 1);
+    pop_buttons($("#back-button"), -1);
+    
+    // 3. UI Transitions
     $(`#room-${nRoom}`).css("display", "block");
     setTimeout(toggle_room, 2000);
-    // shows next page
     setTimeout(movePage, 2000);
     check_room();
   });
@@ -880,37 +875,41 @@ function pop_room_buttons(button) {
 
 // function that adds events listeners to buttons that affects the page's display- called only one time for each button
 function pop_buttons(button, number) {
-  button.on("click", function () {
+  // Use .off("click") to clear old listeners before adding the new one
+  button.off("click").on("click", function () {
     hidePage();
+
+    // Lesson Map logic: Color checkpoint if moving from a non-quiz page
     if ((matrix[nRoom][nPage].type !== undefined) && (matrix[nRoom][nPage].type !== "quiz")) {
       if ($(`#lesson-map-${nRoom} .topic-${topic_counter}`).css("background-image").includes("normal")) {
         checkpoint(true);
       }
-    } else if (matrix[nRoom][nPage].type === "quiz") {
+    }
+    // Quiz logic: Increment question counter
+    else if (matrix[nRoom][nPage].type === "quiz") {
+      // Note: number is usually 1 or -1 here
       question_counter = question_counter + eval(number);
     }
-    // changes page counter
-    // if the button is prev/next/about (ect), the number is added to page counter
+
+    // Navigation logic
     if (button.hasClass("move")) {
       nPage = nPage + eval(number);
-      // lessom map movememt (ahami head)
-      // if the topic changes whem moving page (there are pages with the same topic)
-      // after a game the topic is equal to the content topic and there is no need to change
+
+      // Movement logic for the "Ahami" head on the map
       if ((matrix[nRoom][nPage].topic !== undefined) && (topic_counter !== matrix[nRoom][nPage].topic)) {
         move_lessonMap(topic_distance * number);
       }
     }
-    // if the button is part of the lesson map, page counter is compared to the number 
+    // Jump logic (e.g., clicking a specific checkpoint on the map)
     else if (button.hasClass("topic")) {
       nPage = eval(number);
-      // lessom map movememt (ahami head)
       move_lessonMap(topic_distance * (matrix[nRoom][nPage].topic - topic_counter));
     }
-    // shows next page
+
+    // Transition to the new page
     movePage();
   });
 }
-
 // function that is called every time going in to new room to start from stratch
 check_room = () => {
   // hearts
@@ -1041,11 +1040,11 @@ type_content = () => {
   }
 }
 
-pop_home_page_button = () => {
-  $("#controls .home-page-button").on("click", function () {
-    hidePage();
-    homePage();
-  });
+function pop_home_page_button() {
+    $("#controls .home-page-button").off("click").on("click", function () {
+        hidePage();
+        homePage();
+    });
 }
 
 // before using this function there is need to call hidePage()
