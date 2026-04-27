@@ -909,7 +909,7 @@ check_room = () => {
   nLife = 3;
   for (let i = 1; i <= nLife; i++) {
     switch_class($(`#heart-${i}`), "hidden", "visible");
-    $(`#heart-${i} .heart`).attr("src", `heart/heart${i}_happy.svg`);
+    $(`#heart-${i} .heart`).attr("src", `assets/media/heart/heart${i}_happy.svg`);
   }
   // lesson map
   topic_counter = 1;
@@ -943,18 +943,18 @@ checkpoint = (condition) => {
   // if (curr_checkpoint.css("background-image").includes("normal")) {
   // if this is a content page or the user succeded in a game
   if (condition) {
-    curr_checkpoint.css("background-image", `url("2content/checkpoint_right.svg")`);
+    curr_checkpoint.css("background-image", `url("assets/media/2content/checkpoint_right.svg")`);
     // changing ahami little head to happy
-    if ($("#topic-counter").attr("src") === "2content/head_sad.svg") {
-      $("#topic-counter").attr("src", "2content/head_happy.svg")
+    if ($("#topic-counter").attr("src") === "assets/media/2content/head_sad.svg") {
+      $("#topic-counter").attr("src", "assets/media/2content/head_happy.svg")
     }
   }
   // the user lost the game
   else {
-    curr_checkpoint.css("background-image", `url("2content/checkpoint_wrong.svg")`);
+    curr_checkpoint.css("background-image", `url("assets/media/2content/checkpoint_wrong.svg")`);
     // changing ahami little head to sad
-    if ($("#topic-counter").attr("src") === "2content/head_happy.svg") {
-      $("#topic-counter").attr("src", "2content/head_sad.svg")
+    if ($("#topic-counter").attr("src") === "assets/media/2content/head_happy.svg") {
+      $("#topic-counter").attr("src", "assets/media/2content/head_sad.svg")
     }
   }
   // the checkpoint is clickable
@@ -1002,7 +1002,7 @@ pop_attach = () => {
     }
     // display files
     for (let j = 0; j < matrix[nRoom][nPage].attach[$(this).attr("class").split(/\s+/)[2].slice(-1) - 1].length; j++) {
-      $("#scroll-div").append(`<img class="attach-file" src="files/${matrix[nRoom][nPage].divName[0]}/${matrix[nRoom][nPage].attach[$(this).attr("class").split(/\s+/)[2].slice(-1) - 1][j]}.svg">`);
+      $("#scroll-div").append(`<img class="attach-file" src="assets/media/files/${matrix[nRoom][nPage].divName[0]}/${matrix[nRoom][nPage].attach[$(this).attr("class").split(/\s+/)[2].slice(-1) - 1][j]}.svg">`);
     }
 
     if ($(`#${matrix[nRoom][nPage].divName} .attach.visited`).length === matrix[nRoom][nPage].attach.length) {
@@ -1050,15 +1050,23 @@ homePage = () => {
   movePage();
   switch_class($("#controls"), "flex", "none");
   // ahami head happy
-  if ($("#topic-counter").attr("src") === "2content/head_sad.svg") {
-    $("#topic-counter").attr("src", "2content/head_happy.svg")
+  if ($("#topic-counter").attr("src") === "assets/media/2content/head_sad.svg") {
+    $("#topic-counter").attr("src", "assets/media/2content/head_happy.svg")
   }
-
-  //open all rooms at the beginning
   for (let i = 1; i <= 4; i++) {
     pop_room_buttons($(`#room-button-${i}`));
   }
-  
+  $(".room-button").off("click").on("click", function () {
+    hidePage();
+    nRoom = Number($(this).attr("id").slice(-1));
+    nPage = 0;
+
+    $(`#room-${nRoom}`).css("display", "block");
+    setTimeout(toggle_room, 2000);
+    setTimeout(movePage, 2000);
+
+    check_room();
+  });
 }
 
 pop_watch_room_button = () => {
@@ -1095,8 +1103,8 @@ restart = () => {
   // specific games
   eval(`restart_${nRoom}()`);
   // lesson map
-  $(`#lesson-map-${nRoom} .topic`).css("background-image", "url('2content/checkpoint_normal.svg')");
-  $(`.ahami-head, #topic-counter`).attr("src", `2content/head_happy.svg`);
+  $(`#lesson-map-${nRoom} .topic`).css("background-image", "url('assets/media/2content/checkpoint_normal.svg')");
+  $(`.ahami-head, #topic-counter`).attr("src", `assets/media/2content/head_happy.svg`);
 
   // home page
   //nRoom = 0 nPage = 0
