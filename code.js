@@ -1049,16 +1049,32 @@ pop_home_page_button = () => {
 // before using this function there is need to call hidePage()
 // sends the user to home page
 homePage = () => {
-  // hide previous lesson map
+  // הסתרת מפת השיעור הקודמת
   switch_class($(`#lesson-map-${nRoom}`), "flex", "none");
+  
   nRoom = 0;
   nPage = 0;
-  movePage();
+  movePage(); // מציג את דף הפתיחה
+  
   switch_class($("#controls"), "flex", "none");
-  // ahami head happy
+
+  // החזרת הראש של אהמי למצב שמח
   if ($("#topic-counter").attr("src") === "assets/media/2content/head_sad.svg") {
-    $("#topic-counter").attr("src", "assets/media/2content/head_happy.svg")
+    $("#topic-counter").attr("src", "assets/media/2content/head_happy.svg");
   }
+
+  // הפעלת כל הכפתורים - וודאי שהלופ רץ על כולם
+  for (let i = 1; i <= 4; i++) {
+    let btn = $(`#room-button-${i}`);
+    // אם הכפתור עוד לא הוגדר מעולם, נגדיר אותו
+    if (!btn.hasClass("abled")) {
+      pop_room_buttons(btn);
+    } else {
+      // אם הוא כבר הוגדר, רק נוודא שהוא נראה פעיל
+      switch_class(btn, "enabled", "abled");
+    }
+  }
+}
 
   $(".room-button").off("click").on("click", function () {
     hidePage();
