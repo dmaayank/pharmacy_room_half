@@ -363,7 +363,7 @@ var Arr_2 = [
 ];
 
 // doctor's room
-var Arr_3 = [  
+var Arr_3 = [
   {
     // room 3 page 1
     divName: ["r3p1"],
@@ -742,7 +742,7 @@ var Arr_4 = [
     functions: [],
     type: "content",
     topic: 13
-  }, 
+  },
   {
     // question 1- page 22
     divName: ["q1"],
@@ -790,8 +790,16 @@ var Arr_4 = [
 var matrix = [[
   {
     // opening- page 0
-    divName: ["opening"], // the last div contains the speech bubble
-    functions: ['pop_room_buttons($("#room-button-1"))', 'pop_buttons($("#about-button"), 1)', "pop_calculateStrokeTextCSS(16)"] // array of functions that are needed to the page. If the functions contain the word "pop", it will happen only once and will be popped out of the array afterwards
+    // Change this in your matrix variable at the top:
+    divName: ["opening"],
+    functions: [
+      'pop_room_buttons($("#room-button-1"))',
+      'pop_room_buttons($("#room-button-2"))',
+      'pop_room_buttons($("#room-button-3"))',
+      'pop_room_buttons($("#room-button-4"))',
+      'pop_buttons($("#about-button"), 1)',
+      "pop_calculateStrokeTextCSS(16)"
+    ]
   },
   {
     // about- page 1
@@ -806,7 +814,7 @@ var topic_counter = 1;
 // the distance between each circle in the lesson map (for the head movement)- different for each room 
 var topic_distance = 4;
 
-$(function() {
+$(function () {
   // calls the opening page
   movePage();
 });
@@ -817,7 +825,7 @@ function movePage() {
   for (let i = 0; i < matrix[nRoom][nPage].divName.length; i++) {
     $("#" + matrix[nRoom][nPage].divName[i]).css("display", "block");
   }
- 
+
   // functions
   // calls the functions of the page
   if (matrix[nRoom][nPage].functions.length > 0) {
@@ -826,7 +834,7 @@ function movePage() {
       eval(matrix[nRoom][nPage].functions[nFunction]);
       // functions that contains the word "pop" will accur only once
       if (matrix[nRoom][nPage].functions[nFunction].includes("pop")) {
-        matrix[nRoom][nPage].functions.splice(nFunction , 1);
+        matrix[nRoom][nPage].functions.splice(nFunction, 1);
         // since the function happens only once there is no need in adding nFunction +1
       } else {
         nFunction++;
@@ -841,43 +849,43 @@ function movePage() {
 }
 
 function hidePage() {
-    // hides last divs
-    for (let i = 0; i < matrix[nRoom][nPage].divName.length; i++) {
-      $("#" + matrix[nRoom][nPage].divName[i]).css("display", "none");
-    }
-    // changing checkpoint in lesson map
-    // if the topic changes whem moving page (there are pages with the same topic)
-    // after a game the topic is equal to the content topic and there is no need to change
-    // if (matrix[nRoom][nPage].topic !== undefined) {
-    // }
+  // hides last divs
+  for (let i = 0; i < matrix[nRoom][nPage].divName.length; i++) {
+    $("#" + matrix[nRoom][nPage].divName[i]).css("display", "none");
+  }
+  // changing checkpoint in lesson map
+  // if the topic changes whem moving page (there are pages with the same topic)
+  // after a game the topic is equal to the content topic and there is no need to change
+  // if (matrix[nRoom][nPage].topic !== undefined) {
+  // }
 }
 
 // function that adds events listeners to room buttons that displays the chosen room- called only one time for each button
 function pop_room_buttons(button) {
   // changing button appearance
   switch_class(button, "enabled", "abled");
-  button.on("click", function() {
+  button.on("click", function () {
     // hides last divs
     hidePage();
     // changes room counter
-    nRoom = Number(button.attr("id").slice(-1)); 
+    nRoom = Number(button.attr("id").slice(-1));
     // display room
     $(`#room-${nRoom}`).css("display", "block");
-    setTimeout(toggle_room, 2000); 
+    setTimeout(toggle_room, 2000);
     // shows next page
-    setTimeout(movePage, 2000); 
-    check_room(); 
+    setTimeout(movePage, 2000);
+    check_room();
   });
 }
 
 // function that adds events listeners to buttons that affects the page's display- called only one time for each button
 function pop_buttons(button, number) {
-  button.on("click", function() {
+  button.on("click", function () {
     hidePage();
     if ((matrix[nRoom][nPage].type !== undefined) && (matrix[nRoom][nPage].type !== "quiz")) {
       if ($(`#lesson-map-${nRoom} .topic-${topic_counter}`).css("background-image").includes("normal")) {
         checkpoint(true);
-        }
+      }
     } else if (matrix[nRoom][nPage].type === "quiz") {
       question_counter = question_counter + eval(number);
     }
@@ -886,20 +894,20 @@ function pop_buttons(button, number) {
     if (button.hasClass("move")) {
       nPage = nPage + eval(number);
       // lessom map movememt (ahami head)
-        // if the topic changes whem moving page (there are pages with the same topic)
-        // after a game the topic is equal to the content topic and there is no need to change
-        if ((matrix[nRoom][nPage].topic !== undefined) && (topic_counter !== matrix[nRoom][nPage].topic)) {
-          move_lessonMap(topic_distance * number);
-        }
+      // if the topic changes whem moving page (there are pages with the same topic)
+      // after a game the topic is equal to the content topic and there is no need to change
+      if ((matrix[nRoom][nPage].topic !== undefined) && (topic_counter !== matrix[nRoom][nPage].topic)) {
+        move_lessonMap(topic_distance * number);
+      }
     }
     // if the button is part of the lesson map, page counter is compared to the number 
     else if (button.hasClass("topic")) {
       nPage = eval(number);
       // lessom map movememt (ahami head)
-        move_lessonMap(topic_distance * (matrix[nRoom][nPage].topic - topic_counter));
+      move_lessonMap(topic_distance * (matrix[nRoom][nPage].topic - topic_counter));
     }
     // shows next page
-    movePage();    
+    movePage();
   });
 }
 
@@ -907,7 +915,7 @@ function pop_buttons(button, number) {
 check_room = () => {
   // hearts
   nLife = 3;
-  for (let i = 1; i <= nLife ; i++) {
+  for (let i = 1; i <= nLife; i++) {
     switch_class($(`#heart-${i}`), "hidden", "visible");
     $(`#heart-${i} .heart`).attr("src", `assets/media/heart/heart${i}_happy.svg`);
   }
@@ -915,19 +923,19 @@ check_room = () => {
   topic_counter = 1;
   switch (nRoom) {
     case 1:
-      topic_distance = 14.8;  
+      topic_distance = 14.8;
       break;
     case 2:
-      topic_distance = 5.38;  
+      topic_distance = 5.38;
       break;
     case 3:
-      topic_distance = 8.5;  
+      topic_distance = 8.5;
       break;
     case 4:
-      topic_distance = 4.6;  
+      topic_distance = 4.6;
       break;
     default:
-      topic_distance = 4; 
+      topic_distance = 4;
   }
   $("#topic-counter").css("right", "-63.5vw");
   // comments array
@@ -941,33 +949,33 @@ checkpoint = (condition) => {
   let curr_checkpoint = $(`#lesson-map-${nRoom} .topic-${topic_counter}`);
   // if the checkpoint haven't been changed
   // if (curr_checkpoint.css("background-image").includes("normal")) {
-    // if this is a content page or the user succeded in a game
-    if (condition) {
-      curr_checkpoint.css("background-image", `url("assets/media/2content/checkpoint_right.svg")`);
-      // changing ahami little head to happy
-      if ($("#topic-counter").attr("src") === "assets/media/2content/head_sad.svg") {
-        $("#topic-counter").attr("src", "assets/media/2content/head_happy.svg")
-      }
+  // if this is a content page or the user succeded in a game
+  if (condition) {
+    curr_checkpoint.css("background-image", `url("assets/media/2content/checkpoint_right.svg")`);
+    // changing ahami little head to happy
+    if ($("#topic-counter").attr("src") === "assets/media/2content/head_sad.svg") {
+      $("#topic-counter").attr("src", "assets/media/2content/head_happy.svg")
     }
-    // the user lost the game
-    else {
-      curr_checkpoint.css("background-image", `url("assets/media/2content/checkpoint_wrong.svg")`);
-      // changing ahami little head to sad
-      if ($("#topic-counter").attr("src") === "assets/media/2content/head_happy.svg") {
-        $("#topic-counter").attr("src", "assets/media/2content/head_sad.svg")
-      }
+  }
+  // the user lost the game
+  else {
+    curr_checkpoint.css("background-image", `url("assets/media/2content/checkpoint_wrong.svg")`);
+    // changing ahami little head to sad
+    if ($("#topic-counter").attr("src") === "assets/media/2content/head_happy.svg") {
+      $("#topic-counter").attr("src", "assets/media/2content/head_sad.svg")
     }
-    // the checkpoint is clickable
-    if (!curr_checkpoint.hasClass("button")) {
-      pop_buttons(curr_checkpoint, nPage);
-      curr_checkpoint.addClass("button");
-    }
+  }
+  // the checkpoint is clickable
+  if (!curr_checkpoint.hasClass("button")) {
+    pop_buttons(curr_checkpoint, nPage);
+    curr_checkpoint.addClass("button");
+  }
 }
 
 // moves ahami lesson map head- after moving topic and after every game
 move_lessonMap = (distance) => {
   // change lesson map head place
-  $("#topic-counter").animate({right: `+=${distance}vw`}, 1000);
+  $("#topic-counter").animate({ right: `+=${distance}vw` }, 1000);
   // update topic counter
   if (matrix[nRoom][nPage].type === "game") {
     topic_counter++;
@@ -977,24 +985,24 @@ move_lessonMap = (distance) => {
 }
 
 // display/hides room image (every room start and with the room button)
-toggle_room = ()  => {
+toggle_room = () => {
   let room_div = $(`#room-${nRoom}`);
   // display the room
   if (room_div.css("display") === "none") {
-    room_div.css("display","block");
-    room_div.animate({opacity: `1`}, 500);
+    room_div.css("display", "block");
+    room_div.animate({ opacity: `1` }, 500);
   }
   // hide the room
   else {
-    room_div.animate({opacity: `0`}, 500, function() {
-    room_div.css("display","none");
+    room_div.animate({ opacity: `0` }, 500, function () {
+      room_div.css("display", "none");
     });
   }
 }
 
 // when clicking on attach sign
-pop_attach = ()  => {
-  $(".attach").on("click", function() {
+pop_attach = () => {
+  $(".attach").on("click", function () {
     // darken page
     $("#black-div").css("display", "block");
     if (!$(this).hasClass("visited")) {
@@ -1010,9 +1018,9 @@ pop_attach = ()  => {
     }
   });
 
-  $("#scroll-back-button").on("click", function() {
-     $("#black-div").css("display", "none");
-     $("#scroll-div").html("");
+  $("#scroll-back-button").on("click", function () {
+    $("#black-div").css("display", "none");
+    $("#scroll-div").html("");
   });
 }
 
@@ -1021,7 +1029,7 @@ type_content = () => {
   // display controls
   switch_class($("#controls"), "none", "flex");
   switch_class($(`#lesson-map-${nRoom}`), "none", "flex");
-  
+
   if (matrix[nRoom][nPage].attach !== undefined) {
     // if the user havent visited the room yet
     // the next button is blocked until whole the attached buttons are clicked
@@ -1029,12 +1037,12 @@ type_content = () => {
       switch_class($("#next-button"), "visible", "hidden");
     }
   } else if (matrix[nRoom][nPage] !== matrix[nRoom][matrix[nRoom].length - 1]) {
-     switch_class($("#next-button"), "hidden", "visible");
+    switch_class($("#next-button"), "hidden", "visible");
   }
 }
 
 pop_home_page_button = () => {
-  $("#controls .home-page-button").on("click", function() {
+  $("#controls .home-page-button").on("click", function () {
     hidePage();
     homePage();
   });
@@ -1045,11 +1053,11 @@ pop_home_page_button = () => {
 homePage = () => {
   // הסתרת מפת השיעור הקודמת
   switch_class($(`#lesson-map-${nRoom}`), "flex", "none");
-  
+
   nRoom = 0;
   nPage = 0;
   movePage(); // מציג את דף הפתיחה
-  
+
   switch_class($("#controls"), "flex", "none");
 
   // החזרת הראש של אהמי למצב שמח
@@ -1071,13 +1079,13 @@ homePage = () => {
 }
 
 pop_watch_room_button = () => {
-  $("#watch-room-button").on("click", function() {
+  $("#watch-room-button").on("click", function () {
     toggle_room();
     // display back button (when entering new room there is no back button, therefore it is in separated tag in HTML)
     setTimeout(switch_class, 500, $("#back-room-button"), "none", "block");
-    switch_class($("#controls"), "flex", "none"); 
+    switch_class($("#controls"), "flex", "none");
   });
-  $("#back-room-button").on("click", function() {
+  $("#back-room-button").on("click", function () {
     toggle_room();
     switch_class($("#back-room-button"), "block", "none");
     setTimeout(switch_class, 500, $("#controls"), "none", "flex");
@@ -1090,7 +1098,7 @@ switch_class = (object, prevClass, currClass) => {
     object.removeClass(prevClass);
     object.addClass(currClass);
   }
-}	
+}
 
 restart = () => {
   // can't reset matrix after resetting nRoom and nPage
@@ -1126,13 +1134,13 @@ restart = () => {
   //   }
   // });
 
-  $(`.drag`).each(function(index, drag) {
+  $(`.drag`).each(function (index, drag) {
     if ($(drag).is('.ui-draggable')) {
       $(drag).draggable("option", "disabled", false);
     }
   });
 
-  $(`.slider`).each(function(index, slider) {
+  $(`.slider`).each(function (index, slider) {
     if (typeof $(slider).slider() !== "undefined") {
       $(slider).slider("enable");
     }
@@ -1142,7 +1150,7 @@ restart = () => {
 }
 
 pop_home_button = () => {
-  $("#home-button").on("click", function() {
+  $("#home-button").on("click", function () {
     $("#ending-lomda").css("display", "none");
     switch_class($("#spinning-flex"), "flex", "none");
   });
@@ -1159,7 +1167,7 @@ the_end = () => {
     $(`#grade-${i}`).html(String(arr_marks[i - 1]));
     final_grade += arr_marks[i - 1];
   }
-  final_grade = final_grade/arr_marks.length;
+  final_grade = final_grade / arr_marks.length;
   $("#total-score").html(String(final_grade));
   $(`#grade-print`).html(`ציון: ${String(final_grade)}`);
 }
@@ -1185,8 +1193,8 @@ function copy(o) {
   var output, v, key;
   output = Array.isArray(o) ? [] : {};
   for (key in o) {
-      v = o[key];
-      output[key] = (typeof v === "object") ? copy(v) : v;
+    v = o[key];
+    output[key] = (typeof v === "object") ? copy(v) : v;
   }
   return output;
 }
