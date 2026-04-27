@@ -790,9 +790,15 @@ var Arr_4 = [
 var matrix = [[
   {
     // opening- page 0
-    divName: ["opening"], // the last div contains the speech bubble
-    functions: ['pop_room_buttons($("#room-button-1"))', 'pop_buttons($("#about-button"), 1)', "pop_calculateStrokeTextCSS(16)"] // array of functions that are needed to the page. If the functions contain the word "pop", it will happen only once and will be popped out of the array afterwards
-  },
+divName: ["opening"], 
+functions: [
+    'pop_room_buttons($("#room-button-1"))', 
+    'pop_room_buttons($("#room-button-2"))', 
+    'pop_room_buttons($("#room-button-3"))', 
+    'pop_room_buttons($("#room-button-4"))', 
+    'pop_buttons($("#about-button"), 1)', 
+    "pop_calculateStrokeTextCSS(16)"
+]  },
   {
     // about- page 1
     divName: ["about"],
