@@ -1053,9 +1053,7 @@ homePage = () => {
   if ($("#topic-counter").attr("src") === "assets/media/2content/head_sad.svg") {
     $("#topic-counter").attr("src", "assets/media/2content/head_happy.svg")
   }
-  for (let i = 1; i <= 4; i++) {
-    pop_room_buttons($(`#room-button-${i}`));
-  }
+
   $(".room-button").off("click").on("click", function () {
     hidePage();
     nRoom = Number($(this).attr("id").slice(-1));
