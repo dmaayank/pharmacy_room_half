@@ -1087,7 +1087,7 @@ homePage = () => {
 
     check_room();
   });
-}
+
 
 pop_watch_room_button = () => {
   $("#watch-room-button").on("click", function () {
